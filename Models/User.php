@@ -22,10 +22,24 @@ use Aldu\Core;
 
 class User extends Core\Model
 {
-  protected static $configuration = array('ciao' => 'mondo');
-  public $name;
-  public $password;
-  public $firstname;
-  public $lastname;
-  public $email;
+  protected static $configuration = array(
+    'datasource' => array(
+      'ldap' => array(
+        'type' => 'openldap',
+        'ad' => array(
+          'base' => 'CN=Users', 'rdn' => 'CN', 'objectClass' => 'user',
+          'mappings' => array(
+            'name' => 'sAMAccountName', 'firstname' => 'givenName',
+            'lastname' => 'sn'
+          )
+        )
+      )
+    )
+  );
+
+  protected $name;
+  protected $password;
+  protected $firstname;
+  protected $lastname;
+  protected $mail;
 }
