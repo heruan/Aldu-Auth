@@ -26,6 +26,15 @@ class User extends Core\Model
     'datasource' => array(
       'ldap' => array(
         'type' => 'openldap',
+        'openldap' => array(
+          'base' => 'ou=people', 'rdn' => 'uid', 'objectClass' => 'posixAccount',
+          'mappings' => array(
+            'id' => 'uidNumber',
+            'name' => 'uid',
+            'firstname' => 'givenName',
+            'lastname' => 'sn'
+          )
+        ),
         'ad' => array(
           'base' => 'CN=Users', 'rdn' => 'CN', 'objectClass' => 'user',
           'mappings' => array(
@@ -37,9 +46,9 @@ class User extends Core\Model
     )
   );
 
-  protected $name;
-  protected $password;
-  protected $firstname;
-  protected $lastname;
-  protected $mail;
+  public $name;
+  public $password;
+  public $firstname;
+  public $lastname;
+  public $mail;
 }

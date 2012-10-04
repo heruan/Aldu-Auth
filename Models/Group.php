@@ -22,6 +22,42 @@ use Aldu\Core;
 
 class Group extends Core\Model
 {
+  protected static $configuration = array(
+    'datasource' => array(
+      'ldap' => array(
+        'type' => 'openldap',
+        'openldap' => array(
+          'base' => 'ou=groups',
+          'rdn' => 'cn',
+          'objectClass' => 'posixGroup',
+          'mappings' => array(
+            'id' => 'gidNumber',
+            'name' => 'cn',
+            'members' => 'memberUid'
+          ),
+          'references' => array(
+            'members' => array(
+              'class' => 'Aldu\Auth\Models\User',
+              'attribute' => 'name'
+            )
+          )
+        ),
+        'ad' => array(
+          'base' => 'CN=Groups',
+          'rdn' => 'CN',
+          'objectClass' => 'group',
+          'mappings' => array(
+          )
+        )
+      )
+    )
+  );
+
   public $name;
-  public $members = array();
+  public $members;
+
+  public function hasMember($model)
+  {
+    return in_array($model, $this->members);
+  }
 }
