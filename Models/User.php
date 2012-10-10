@@ -42,6 +42,7 @@ class User extends Core\Model
           'rdn' => 'CN',
           'objectClass' => 'user',
           'mappings' => array(
+            'id' => 'objectGUID',
             'name' => 'sAMAccountName',
             'firstname' => 'givenName',
             'lastname' => 'sn'
@@ -52,20 +53,20 @@ class User extends Core\Model
   );
 
   protected static $relations = array(
-    'Aldu\Core\Model' => array(
-      'type' => 'has',
-      'attributes' => array(
+    'has' => array(
+      'Aldu\Core\Model' => array(
         'acl' => array(
           'type' => array(
             'read',
             'update',
             'delete'
-          )
+          ),
+          'default'=> array('read')
         )
       )
     ),
-    'Aldu\Auth\Models\Group' => array(
-      'type' => 'belongs'
+    'belongs' => array(
+      'Aldu\Auth\Models\Group' => true
     )
   );
 
