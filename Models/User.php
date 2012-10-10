@@ -27,7 +27,9 @@ class User extends Core\Model
       'ldap' => array(
         'type' => 'openldap',
         'openldap' => array(
-          'base' => 'ou=people', 'rdn' => 'uid', 'objectClass' => 'posixAccount',
+          'base' => 'ou=people',
+          'rdn' => 'uid',
+          'objectClass' => 'posixAccount',
           'mappings' => array(
             'id' => 'uidNumber',
             'name' => 'uid',
@@ -36,13 +38,34 @@ class User extends Core\Model
           )
         ),
         'ad' => array(
-          'base' => 'CN=Users', 'rdn' => 'CN', 'objectClass' => 'user',
+          'base' => 'CN=Users',
+          'rdn' => 'CN',
+          'objectClass' => 'user',
           'mappings' => array(
-            'name' => 'sAMAccountName', 'firstname' => 'givenName',
+            'name' => 'sAMAccountName',
+            'firstname' => 'givenName',
             'lastname' => 'sn'
           )
         )
       )
+    )
+  );
+
+  protected static $relations = array(
+    'Aldu\Core\Model' => array(
+      'type' => 'has',
+      'attributes' => array(
+        'acl' => array(
+          'type' => array(
+            'read',
+            'update',
+            'delete'
+          )
+        )
+      )
+    ),
+    'Aldu\Auth\Models\Group' => array(
+      'type' => 'belongs'
     )
   );
 
