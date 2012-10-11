@@ -42,7 +42,7 @@ class User extends Core\Model
           'rdn' => 'CN',
           'objectClass' => 'user',
           'mappings' => array(
-            'id' => 'objectGUID',
+            'id' => 'distinguishedName',
             'name' => 'sAMAccountName',
             'firstname' => 'givenName',
             'lastname' => 'sn'
