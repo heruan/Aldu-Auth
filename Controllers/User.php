@@ -43,12 +43,13 @@ class User extends Core\Controller
         else {
           $this->request->session->delete("Aldu\Core\Net\HTTP\Request::updateAro");
           $this->request->aro = null;
+          $this->response->message($this->view->locale->t("Authentication failed."), LOG_ERR);
         }
       }
     }
     return $this->view->login();
   }
-  
+
   public function logout()
   {
     if ($this->request->aro) {

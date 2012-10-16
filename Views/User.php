@@ -18,6 +18,7 @@
  */
 
 namespace Aldu\Auth\Views;
+use Aldu\Auth;
 use Aldu\Core;
 use Aldu\Core\View\Helper\HTML;
 
@@ -64,8 +65,7 @@ class User extends Core\View
       $form
         ->text('name',
           array(
-            'title' => $this->locale->t("Username"),
-            'description' => $this->locale->t("Username for authentication."),
+            'title' => $this->locale->t("User's name"),
             'required' => true, 'readonly' => false
           ));
     }
@@ -73,8 +73,7 @@ class User extends Core\View
       ->password('password',
         array(
           'title' => $this->locale->t("User's password"),
-          'description' => $this->locale
-            ->t("User's password for authentication."), 'required' => true,
+          'required' => true,
           'readonly' => false
         ));
     $form
@@ -83,6 +82,8 @@ class User extends Core\View
           'title' => $this->locale->t("Login")
         ));
     switch ($this->render) {
+    case 'return':
+      return $form;
     case 'embed':
       return $this->response->body($form);
     case 'page':
@@ -104,17 +105,23 @@ class User extends Core\View
     $this->response
       ->message($this->locale->t("Successfully logged out. (%s)", $a));
   }
-  
+
   public static function panel($block, $element)
   {
     $locale = Core\Locale::instance();
     $request = Core\Net\HTTP\Request::instance();
     if (is_a($request->aro, 'Aldu\Auth\Models\User')) {
       $user = $request->aro;
-      $ul = new HTML('ul.aldu-ui-toolbar-user');
+      $ul = new HTML('ul.menu.aldu-auth-user-panel');
       $ul->li()->a($locale->t("Hello %s", $user->firstname))->href = $user->url('update');
       $ul->li()->a($locale->t("Logout"))->href = $user->url('logout');
       return $ul;
+    }
+    else {
+      $user = new Auth\Models\User();
+      $self = new User(new Auth\Models\User($user));
+      $self->render = 'return';
+      return $self->login();
     }
     return null;
   }
