@@ -22,14 +22,18 @@ use Aldu\Core;
 
 class User extends Core\Model
 {
-  protected static $configuration = array(
+  protected static $configuration = array(__CLASS__ => array(
     'datasource' => array(
+      'authentication' => array(
+        'id' => 'name',
+        'password' => 'password'
+      ),
       'ldap' => array(
         'type' => 'openldap',
         'openldap' => array(
           'base' => 'ou=people',
           'rdn' => 'uid',
-          'objectClass' => 'posixAccount',
+          'filter' => array('objectClass' => 'posixAccount'),
           'mappings' => array(
             'id' => 'uidNumber',
             'name' => 'uid',
@@ -40,17 +44,17 @@ class User extends Core\Model
         'ad' => array(
           'base' => 'CN=Users',
           'rdn' => 'CN',
-          'objectClass' => 'user',
+          'filter' => array('objectClass' => 'user'),
           'mappings' => array(
-            'id' => 'distinguishedName',
-            'name' => 'sAMAccountName',
+            'id' => 'sAMAccountName',
+            'name' => 'cn',
             'firstname' => 'givenName',
             'lastname' => 'sn'
           )
         )
       )
     )
-  );
+  ));
 
   protected static $relations = array(
     'has' => array(
@@ -75,4 +79,9 @@ class User extends Core\Model
   public $firstname;
   public $lastname;
   public $mail;
+  
+  public function label()
+  {
+    return "{$this->lastname} {$this->firstname}";
+  }
 }

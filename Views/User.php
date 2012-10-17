@@ -24,13 +24,13 @@ use Aldu\Core\View\Helper\HTML;
 
 class User extends Core\View
 {
-  protected static $configuration = array(
+  protected static $configuration = array(__CLASS__ => array(
     'table' => array(
       'columns' => array(
         'name', 'mail', 'firstname', 'lastname'
       )
     )
-  );
+  ));
 
   public function login()
   {
@@ -50,10 +50,11 @@ class User extends Core\View
       array(
         'redirect' => $this->request->referer ? : $this->router->basePath
       ));
-    switch ($class::cfg('datasource.authentication.id')) {
+    $id = $class::cfg('datasource.authentication.id') ?: 'name';
+    switch ($id) {
     case 'mail':
       $form
-        ->email('mail',
+        ->email($id,
           array(
             'title' => $this->locale->t("User's e-mail"),
             'description' => $this->locale
@@ -63,14 +64,15 @@ class User extends Core\View
       break;
     default:
       $form
-        ->text('name',
+        ->text($id,
           array(
             'title' => $this->locale->t("User's name"),
             'required' => true, 'readonly' => false
           ));
     }
+    $password = $class::cfg('datasource.authentication.password') ? : 'password';
     $form
-      ->password('password',
+      ->password($password,
         array(
           'title' => $this->locale->t("User's password"),
           'required' => true,

@@ -22,7 +22,7 @@ use Aldu\Core;
 
 class Group extends Core\Model
 {
-  protected static $configuration = array(
+  protected static $configuration = array(__CLASS__ => array(
     'datasource' => array(
       'ldap' => array(
         'type' => 'openldap',
@@ -51,7 +51,7 @@ class Group extends Core\Model
         )
       )
     )
-  );
+  ));
 
   public $name;
   public $members;
