@@ -24,6 +24,7 @@ class User extends Core\Model
 {
   protected static $configuration = array(__CLASS__ => array(
     'datasource' => array(
+      'options' => array('sort' => array('name' => 1)),
       'authentication' => array(
         'id' => 'name',
         'password' => 'password'
@@ -79,7 +80,7 @@ class User extends Core\Model
   public $firstname;
   public $lastname;
   public $mail;
-  
+
   public function label()
   {
     return "{$this->lastname} {$this->firstname}";
