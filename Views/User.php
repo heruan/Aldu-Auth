@@ -24,22 +24,27 @@ use Aldu\Core\View\Helper\HTML;
 
 class User extends Core\View
 {
-  protected static $configuration = array(__CLASS__ => array(
-    'table' => array(
-      'columns' => array(
-        'name', 'mail', 'firstname', 'lastname'
+  protected static $configuration = array(
+    __CLASS__ => array(
+      'panel' => array(
+        'login' => 'form'
+      ),
+      'table' => array(
+        'columns' => array(
+          'name', 'mail', 'firstname', 'lastname'
+        )
       )
     )
-  ));
+  );
 
   public function login()
   {
     $class = get_class($this->model);
     if (is_a($this->request->aro, $class)) {
-          $a = new HTML('a', $this->locale->t("Logout"),
-      array(
-        'href' => $this->model->url('logout')
-      ));
+      $a = new HTML('a', $this->locale->t("Logout"),
+        array(
+          'href' => $this->model->url('logout')
+        ));
       $this->response
         ->message(
           $this->locale
@@ -50,7 +55,7 @@ class User extends Core\View
       array(
         'redirect' => $this->request->referer ? : $this->router->basePath
       ));
-    $id = $class::cfg('datasource.authentication.id') ?: 'name';
+    $id = $class::cfg('datasource.authentication.id') ? : 'name';
     switch ($id) {
     case 'mail':
       $form
@@ -66,16 +71,15 @@ class User extends Core\View
       $form
         ->text($id,
           array(
-            'title' => $this->locale->t("User's name"),
-            'required' => true, 'readonly' => false
+            'title' => $this->locale->t("User's name"), 'required' => true,
+            'readonly' => false
           ));
     }
     $password = $class::cfg('datasource.authentication.password') ? : 'password';
     $form
       ->password($password,
         array(
-          'title' => $this->locale->t("User's password"),
-          'required' => true,
+          'title' => $this->locale->t("User's password"), 'required' => true,
           'readonly' => false
         ));
     $form
@@ -115,15 +119,23 @@ class User extends Core\View
     if (is_a($request->aro, 'Aldu\Auth\Models\User')) {
       $user = $request->aro;
       $ul = new HTML('ul.menu.aldu-auth-user-panel');
-      $ul->li()->a($locale->t("Hello %s", $user->firstname))->href = $user->url('update');
+      $ul->li()->a($locale->t("Hello %s", $user->firstname))->href = $user
+        ->url('update');
       $ul->li()->a($locale->t("Logout"))->href = $user->url('logout');
       return $ul;
     }
     else {
-      $user = new Auth\Models\User();
-      $self = new User(new Auth\Models\User($user));
-      $self->render = 'return';
-      return $self->login();
+      $self = static::instance();
+      switch (static::cfg('panel.login')) {
+      case 'form':
+        $self->render = 'return';
+        return $self->login();
+      case 'link':
+        $list = new HTML('ul.menu.aldu-auth-user-panel');
+        $anchor = $list->li()->a($self->locale->t('Login'));
+        $anchor->href = $self->model->url('login');
+        return $list;
+      }
     }
     return null;
   }
