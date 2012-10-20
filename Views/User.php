@@ -125,7 +125,7 @@ class User extends Core\View
       return $ul;
     }
     else {
-      $self = static::instance();
+      $self = new self(new Auth\Models\User());
       switch (static::cfg('panel.login')) {
       case 'form':
         $self->render = 'return';
