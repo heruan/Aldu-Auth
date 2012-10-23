@@ -60,4 +60,9 @@ class User extends Core\Controller
     }
     return $this->router->back();
   }
+
+  public function profile($id)
+  {
+    return $this->edit($id);
+  }
 }

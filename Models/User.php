@@ -40,7 +40,7 @@ class User extends Core\Model
             'name' => 'uid',
             'firstname' => 'givenName',
             'lastname' => 'sn'
-          )
+          ),
         ),
         'ad' => array(
           'base' => 'CN=Users',
@@ -63,7 +63,7 @@ class User extends Core\Model
         'acl' => array(
           'type' => array(
             'read',
-            'update',
+            'edit',
             'delete'
           ),
           'default'=> array('read')

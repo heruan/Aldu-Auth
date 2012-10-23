@@ -53,6 +53,28 @@ class Group extends Core\Model
     )
   ));
 
+  protected static $attributes = array(
+    'members' => array(
+      'type' => 'Aldu\Auth\Models\User',
+      'multiple' => true
+     )
+  );
+
+  protected static $relations = array(
+    'has' => array(
+      'Aldu\Core\Model' => array(
+        'acl' => array(
+          'type' => array(
+            'read',
+            'edit',
+            'delete'
+          ),
+          'default'=> array('read')
+        )
+      )
+    )
+  );
+
   public $name;
   public $members;
 
