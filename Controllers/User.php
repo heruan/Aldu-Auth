@@ -36,7 +36,7 @@ class User extends Core\Controller
           $password = $this->request->cipher->encrypt($password);
           $this->request->session->save("Aldu\Core\Net\HTTP\Request::updateAro", array($class, $id, $password, true));
           $this->request->aro = $user;
-          if ($redirect = $this->request->data('_redirect')) {
+          if ($redirect = $this->request->data('redirect')) {
             $this->router->redirect($redirect);
           }
         }
