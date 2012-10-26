@@ -47,8 +47,8 @@ class User extends Core\Model
           'rdn' => 'CN',
           'filter' => array('objectClass' => 'user'),
           'mappings' => array(
-            'id' => 'sAMAccountName',
-            'name' => 'cn',
+            'id' => 'objectSid',
+            'name' => 'sAMAccountName',
             'firstname' => 'givenName',
             'lastname' => 'sn'
           )
