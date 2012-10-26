@@ -44,36 +44,34 @@ class User extends Core\View
       $a = new HTML('a', $this->locale->t("Logout"), array(
         'href' => $this->model->url('logout')
       ));
-      $this->response
-          ->message($this->locale->t("Logged in as %s %s. (%s)", $this->model->name(), $this->request->aro->name, $a));
+      $this->response->message($this->locale->t("Logged in as %s %s. (%s)", $this->model->name(), $this->request->aro->name, $a));
     }
     $form = new HTML\Form($this->model, __FUNCTION__, array(
-      'redirect' => $this->request->referer ? : $this->router->basePath
+      'redirect' => $this->request->referer ? : $this->router->basePath,
+      'attributes' => array('data-ajax' => 'false')
     ));
     $id = $class::cfg('datasource.authentication.id') ? : 'name';
     switch ($id) {
     case 'mail':
       $form
-          ->email($id,
-              array(
-                'title' => $this->locale->t("User's e-mail"), 'description' => $this->locale->t("User's e-mail for authentication."), 'required' => true,
-                'readonly' => false
-              ));
+        ->email($id,
+          array(
+            'title' => $this->locale->t("User's e-mail"), 'description' => $this->locale->t("User's e-mail for authentication."), 'required' => true,
+            'readonly' => false
+          ));
       break;
     default:
-      $form
-          ->text($id, array(
-            'title' => $this->locale->t("User's name"), 'required' => true, 'readonly' => false
-          ));
+      $form->text($id, array(
+          'title' => $this->locale->t("User's name"), 'required' => true, 'readonly' => false
+        ));
     }
     $password = $class::cfg('datasource.authentication.password') ? : 'password';
-    $form
-        ->password($password, array(
-          'title' => $this->locale->t("User's password"), 'required' => true, 'readonly' => false
-        ));
+    $form->password($password, array(
+        'title' => $this->locale->t("User's password"), 'required' => true, 'readonly' => false
+      ));
     $form->submit(__FUNCTION__, array(
-          'title' => $this->locale->t("Login")
-        ));
+        'title' => $this->locale->t("Login")
+      ));
     switch ($this->render) {
     case 'return':
       return $form;
@@ -102,12 +100,17 @@ class User extends Core\View
     $locale = Core\Locale::instance();
     $request = Core\Net\HTTP\Request::instance();
     $response = Core\Net\HTTP\Response::instance();
+    $router = Core\Router::instance();
     $cache = Core\Cache::instance();
     $ul = new HTML('ul');
-    $ul->li("Cache: " . var_export((bool)$cache->enabled, true));
-    $ul->li("Cache stored: " . $cache->stored());
-    $ul->li("Cache fetched: " . $cache->fetched());
-    $ul->li("Time: " . $request->time() . "s");
+    $ul->li()
+      ->a("Cache",
+        array(
+          'href' => $router->basePath . "?clearcache=1", 'data-enabled' => (int) $cache->enabled, 'data-icon' => 'refresh'
+        ));
+    $ul->li()->a($cache->stored())->data('icon', 'plus');
+    $ul->li()->a($cache->fetched())->data('icon', 'minus');
+    $ul->li()->a($request->time())->data('icon', 'gear');
     return $ul;
   }
 
@@ -119,7 +122,9 @@ class User extends Core\View
       $user = $request->aro;
       $ul = new HTML('ul.menu.aldu-auth-user-panel');
       $ul->li()->a($locale->t("Hello %s", $user->firstname))->href = $user->url('profile');
-      $ul->li()->a($locale->t("Logout"))->href = $user->url('logout');
+      $ul->li()->a($locale->t("Logout"), array(
+          'href' => $user->url('logout'), 'data-ajax' => 'false'
+        ));
       return $ul;
     }
     else {
