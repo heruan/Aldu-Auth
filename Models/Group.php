@@ -22,44 +22,45 @@ use Aldu\Core;
 
 class Group extends Core\Model
 {
-  protected static $configuration = array(__CLASS__ => array(
-    'label' => 'title',
-    'datasource' => array(
-      'ldap' => array(
-        'type' => 'openldap',
-        'openldap' => array(
-          'base' => 'ou=groups',
-          'rdn' => 'cn',
-          'objectClass' => 'posixGroup',
-          'mappings' => array(
-            'id' => 'gidNumber',
-            'name' => 'cn',
-            'title' => 'displayName',
-            'members' => 'memberUid'
-          ),
-          'references' => array(
-            'members' => array(
-              'class' => 'Aldu\Auth\Models\User',
-              'attribute' => 'name'
+  protected static $configuration = array(
+    __CLASS__ => array(
+      'label' => 'title',
+      'datasource' => array(
+        'ldap' => array(
+          'type' => 'openldap',
+          'openldap' => array(
+            'base' => 'ou=groups',
+            'rdn' => 'cn',
+            'objectClass' => 'posixGroup',
+            'mappings' => array(
+              'id' => 'gidNumber',
+              'name' => 'cn',
+              'title' => 'displayName',
+              'members' => 'memberUid'
+            ),
+            'references' => array(
+              'members' => array(
+                'class' => 'Aldu\Auth\Models\User',
+                'attribute' => 'name'
+              )
             )
-          )
-        ),
-        'ad' => array(
-          'base' => 'CN=Groups',
-          'rdn' => 'CN',
-          'objectClass' => 'group',
-          'mappings' => array(
+          ),
+          'ad' => array(
+            'base' => 'CN=Groups',
+            'rdn' => 'CN',
+            'objectClass' => 'group',
+            'mappings' => array()
           )
         )
       )
     )
-  ));
+  );
 
   protected static $attributes = array(
     'members' => array(
       'type' => 'Aldu\Auth\Models\User',
       'multiple' => true
-     )
+    )
   );
 
   protected static $relations = array(
@@ -71,7 +72,9 @@ class Group extends Core\Model
             'edit',
             'delete'
           ),
-          'default'=> array('read')
+          'default' => array(
+            'read'
+          )
         )
       )
     )

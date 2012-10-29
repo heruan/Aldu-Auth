@@ -23,45 +23,55 @@ use Aldu\Core\Net\HTTP;
 
 class User extends Core\Model
 {
-  protected static $configuration = array(__CLASS__ => array(
-    'datasource' => array(
-      'options' => array('sort' => array('name' => 1)),
-      'authentication' => array(
-        'id' => 'name',
-        'password' => 'password'
-      ),
-      'ldap' => array(
-        'type' => 'openldap',
-        'openldap' => array(
-          'base' => 'ou=people',
-          'rdn' => 'uid',
-          'filter' => array('objectClass' => 'posixAccount'),
-          'mappings' => array(
-            'id' => 'uidNumber',
-            'name' => 'uid',
-            'firstname' => 'givenName',
-            'lastname' => 'sn'
-          ),
+  protected static $configuration = array(
+    __CLASS__ => array(
+      'datasource' => array(
+        'options' => array(
+          'sort' => array(
+            'name' => 1
+          )
         ),
-        'ad' => array(
-          'base' => 'CN=Users',
-          'rdn' => 'CN',
-          'filter' => array('objectClass' => 'user'),
-          'mappings' => array(
-            'id' => 'objectSid',
-            'name' => 'sAMAccountName',
-            'firstname' => 'givenName',
-            'lastname' => 'sn'
+        'authentication' => array(
+          'id' => 'name',
+          'password' => 'password'
+        ),
+        'ldap' => array(
+          'type' => 'openldap',
+          'openldap' => array(
+            'base' => 'ou=people',
+            'rdn' => 'uid',
+            'filter' => array(
+              'objectClass' => 'posixAccount'
+            ),
+            'mappings' => array(
+              'id' => 'uidNumber',
+              'name' => 'uid',
+              'firstname' => 'givenName',
+              'lastname' => 'sn'
+            ),
+          ),
+          'ad' => array(
+            'base' => 'CN=Users',
+            'rdn' => 'CN',
+            'filter' => array(
+              'objectClass' => 'user'
+            ),
+            'mappings' => array(
+              'id' => 'objectSid',
+              'name' => 'sAMAccountName',
+              'firstname' => 'givenName',
+              'lastname' => 'sn'
+            )
           )
         )
       )
     )
-  ));
+  );
 
   protected static $attributes = array(
     'password' => array(
-       'encrypt' => true
-     )
+      'encrypt' => true
+    )
   );
 
   protected static $relations = array(
@@ -73,7 +83,9 @@ class User extends Core\Model
             'edit',
             'delete'
           ),
-          'default'=> array('read')
+          'default' => array(
+            'read'
+          )
         )
       )
     ),

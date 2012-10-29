@@ -18,7 +18,6 @@
  */
 
 namespace Aldu\Auth\Views;
-
 use Aldu\Auth;
 use Aldu\Core;
 use Aldu\Core\View\Helper\HTML;
@@ -29,9 +28,13 @@ class User extends Core\View
     __CLASS__ => array(
       'panel' => array(
         'login' => 'form'
-      ), 'table' => array(
+      ),
+      'table' => array(
         'columns' => array(
-          'name', 'mail', 'firstname', 'lastname'
+          'name',
+          'mail',
+          'firstname',
+          'lastname'
         )
       )
     )
@@ -48,30 +51,36 @@ class User extends Core\View
     }
     $form = new HTML\Form($this->model, __FUNCTION__, array(
       'redirect' => $this->request->referer ? : $this->router->basePath,
-      'attributes' => array('data-ajax' => 'false')
+      'attributes' => array(
+        'data-ajax' => 'false'
+      )
     ));
     $id = $class::cfg('datasource.authentication.id') ? : 'name';
     switch ($id) {
     case 'mail':
-      $form
-        ->email($id,
-          array(
-            'title' => $this->locale->t("User's e-mail"), 'description' => $this->locale->t("User's e-mail for authentication."), 'required' => true,
-            'readonly' => false
-          ));
+      $form->email($id, array(
+        'title' => $this->locale->t("User's e-mail"),
+        'description' => $this->locale->t("User's e-mail for authentication."),
+        'required' => true,
+        'readonly' => false
+      ));
       break;
     default:
       $form->text($id, array(
-          'title' => $this->locale->t("User's name"), 'required' => true, 'readonly' => false
-        ));
+        'title' => $this->locale->t("User's name"),
+        'required' => true,
+        'readonly' => false
+      ));
     }
     $password = $class::cfg('datasource.authentication.password') ? : 'password';
     $form->password($password, array(
-        'title' => $this->locale->t("User's password"), 'required' => true, 'readonly' => false
-      ));
+      'title' => $this->locale->t("User's password"),
+      'required' => true,
+      'readonly' => false
+    ));
     $form->submit(__FUNCTION__, array(
-        'title' => $this->locale->t("Login")
-      ));
+      'title' => $this->locale->t("Login")
+    ));
     switch ($this->render) {
     case 'return':
       return $form;
@@ -80,7 +89,6 @@ class User extends Core\View
     case 'page':
     default:
       $page = new HTML\Page();
-      $page->theme();
       $page->title($this->locale->t("Login"));
       $page->compose($form);
       return $this->response->body($page);
@@ -103,11 +111,11 @@ class User extends Core\View
     $router = Core\Router::instance();
     $cache = Core\Cache::instance();
     $ul = new HTML('ul');
-    $ul->li()
-      ->a("Cache",
-        array(
-          'href' => $router->basePath . "?clearcache=1", 'data-enabled' => (int) $cache->enabled, 'data-icon' => 'refresh'
-        ));
+    $ul->li()->a("Cache", array(
+      'href' => $router->basePath . "?clearcache=1",
+      'data-enabled' => (int) $cache->enabled,
+      'data-icon' => 'refresh'
+    ));
     $ul->li()->a($cache->stored())->data('icon', 'plus');
     $ul->li()->a($cache->fetched())->data('icon', 'minus');
     $ul->li()->a($request->time())->data('icon', 'gear');
@@ -123,8 +131,9 @@ class User extends Core\View
       $ul = new HTML('ul.menu.aldu-auth-user-panel');
       $ul->li()->a($locale->t("Hello %s", $user->firstname))->href = $user->url('profile');
       $ul->li()->a($locale->t("Logout"), array(
-          'href' => $user->url('logout'), 'data-ajax' => 'false'
-        ));
+        'href' => $user->url('logout'),
+        'data-ajax' => 'false'
+      ));
       return $ul;
     }
     else {
