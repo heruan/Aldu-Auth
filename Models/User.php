@@ -19,6 +19,7 @@
 
 namespace Aldu\Auth\Models;
 use Aldu\Core;
+use Aldu\Core\Net\HTTP;
 
 class User extends Core\Model
 {
@@ -57,6 +58,12 @@ class User extends Core\Model
     )
   ));
 
+  protected static $attributes = array(
+    'password' => array(
+       'encrypt' => true
+     )
+  );
+
   protected static $relations = array(
     'has' => array(
       'Aldu\Core\Model' => array(
@@ -80,6 +87,17 @@ class User extends Core\Model
   public $firstname;
   public $lastname;
   public $mail;
+
+  public function save()
+  {
+    parent::save();
+    $request = HTTP\Request::instance();
+    if ($this === $request->aro) {
+      $id = static::cfg('datasource.authentication.id');
+      $pw = static::cfg('datasource.authentication.password');
+      $request->updateAro(get_class($this), $id, $pw, false);
+    }
+  }
 
   public function label()
   {

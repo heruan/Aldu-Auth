@@ -34,7 +34,8 @@ class User extends Core\Controller
         $password = $attributes[$pwKey];
         if ($user = $this->model->authenticate($id, $password)) {
           $password = $this->request->cipher->encrypt($password);
-          $this->request->session->save("Aldu\Core\Net\HTTP\Request::updateAro", array($class, $id, $password, true));
+          $this->request->updateAro($class, $id, $password);
+          $this->request->session->save("Aldu\Core\Net\HTTP\Request::updateAro", array($class, $id, $password));
           $this->request->aro = $user;
           if ($redirect = $this->request->data('redirect')) {
             $this->router->redirect($redirect);

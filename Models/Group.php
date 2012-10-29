@@ -23,6 +23,7 @@ use Aldu\Core;
 class Group extends Core\Model
 {
   protected static $configuration = array(__CLASS__ => array(
+    'label' => 'title',
     'datasource' => array(
       'ldap' => array(
         'type' => 'openldap',
@@ -33,6 +34,7 @@ class Group extends Core\Model
           'mappings' => array(
             'id' => 'gidNumber',
             'name' => 'cn',
+            'title' => 'displayName',
             'members' => 'memberUid'
           ),
           'references' => array(
@@ -76,6 +78,7 @@ class Group extends Core\Model
   );
 
   public $name;
+  public $title;
   public $members;
 
   public function hasMember($model)
