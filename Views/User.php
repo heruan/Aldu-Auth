@@ -40,8 +40,11 @@ class User extends Core\View
     )
   );
 
-  public function login()
+  public function login($options = array())
   {
+    $options = array_merge(array(
+      'render' => $this->render), $options);
+    extract($options);
     $class = get_class($this->model);
     if (is_a($this->request->aro, $class)) {
       $a = new HTML('a', $this->locale->t("Logout"), array(
@@ -81,7 +84,7 @@ class User extends Core\View
     $form->submit(__FUNCTION__, array(
       'title' => $this->locale->t("Login")
     ));
-    switch ($this->render) {
+    switch ($render) {
     case 'return':
       return $form;
     case 'embed':
@@ -137,17 +140,18 @@ class User extends Core\View
       return $ul;
     }
     else {
-      $self = new self(new Auth\Models\User());
+      $view = get_called_class();
+      $model = $view::model();
+      $self = new $view($model);
       switch (static::cfg('panel.login')) {
       case 'link':
         $list = new HTML('ul.menu.aldu-auth-user-panel');
-        $anchor = $list->li()->a($self->locale->t('Login'));
+        $anchor = $list->li()->a($locale->t('Login'));
         $anchor->href = $self->model->url('login');
         return $list;
       case 'form':
       default:
-        $self->render = 'return';
-        return $self->login();
+        return $self->login(array('render' => 'return'));
       }
     }
     return null;
