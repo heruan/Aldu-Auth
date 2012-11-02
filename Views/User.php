@@ -113,7 +113,7 @@ class User extends Core\View
     $response = Core\Net\HTTP\Response::instance();
     $router = Core\Router::instance();
     $cache = Core\Cache::instance();
-    $ul = new HTML('ul');
+    $ul = new HTML('ul.menu');
     $ul->li()->a("Cache", array(
       'href' => $router->basePath . "?clearcache=1",
       'data-enabled' => (int) $cache->enabled,
