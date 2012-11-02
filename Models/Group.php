@@ -72,6 +72,7 @@ class Group extends Core\Model
             'edit',
             'delete'
           ),
+          'multiple' => true,
           'default' => array(
             'read'
           )

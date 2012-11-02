@@ -50,7 +50,7 @@ class User extends Core\View
       $a = new HTML('a', $this->locale->t("Logout"), array(
         'href' => $this->model->url('logout')
       ));
-      $this->response->message($this->locale->t("Logged in as %s %s. (%s)", $this->model->name(), $this->request->aro->name, $a));
+      $this->response->message($this->locale->t("Logged in as %s %s. (%s)", $this->model->name(), $this->request->aro->label(), $a));
     }
     $form = new HTML\Form($this->model, __FUNCTION__, array(
       'redirect' => $this->request->referer ? : $this->router->basePath,

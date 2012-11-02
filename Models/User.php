@@ -83,6 +83,7 @@ class User extends Core\Model
             'edit',
             'delete'
           ),
+          'multiple' => true,
           'default' => array(
             'read'
           )
@@ -102,13 +103,15 @@ class User extends Core\Model
 
   public function save()
   {
-    parent::save();
-    $request = HTTP\Request::instance();
-    if ($this === $request->aro) {
-      $id = static::cfg('datasource.authentication.id');
-      $pw = static::cfg('datasource.authentication.password');
-      $request->updateAro(get_class($this), $id, $pw, false);
+    if ($user = parent::save()) {
+      $request = HTTP\Request::instance();
+      if ($this === $request->aro) {
+        $id = static::cfg('datasource.authentication.id');
+        $pw = static::cfg('datasource.authentication.password');
+        $request->updateAro(get_class($this), $id, $pw, false);
+      }
     }
+    return $user;
   }
 
   public function label()
