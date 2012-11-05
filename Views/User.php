@@ -103,7 +103,7 @@ class User extends Core\View
     $a = new HTML('a', $this->locale->t("Login back"), array(
       'href' => $this->model->url('login')
     ));
-    $this->response->message($this->locale->t("Successfully logged out. (%s)", $a));
+    $this->response->message($this->locale->t("Successfully logged out. (%s)", $a), LOG_NOTICE);
   }
 
   public static function stats($block, $element)
@@ -144,6 +144,9 @@ class User extends Core\View
       $model = $view::model();
       $self = new $view($model);
       switch (static::cfg('panel.login')) {
+      case 'menu':
+        $Menu = new \Aldu\Blog\Controllers\Menu();
+        return $Menu->view->build('signup');
       case 'link':
         $list = new HTML('ul.menu.aldu-auth-user-panel');
         $anchor = $list->li()->a($locale->t('Login'));
